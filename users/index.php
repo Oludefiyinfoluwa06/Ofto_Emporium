@@ -1,5 +1,7 @@
 <?php
 
+    session_start();
+
     include "./config/db_connect.php";
 
     $cat_sql = "SELECT * FROM categories LIMIT 6";
@@ -23,6 +25,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300;400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <style>
         * {
             margin: 0;
@@ -30,7 +33,7 @@
             list-style: none;
             text-decoration: none;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Poppins';
         }
 
         body {
@@ -62,7 +65,7 @@
         }
 
         nav ul li:hover a, nav ul li.active a {
-            color: #0000ff;
+            color: #003399;
         }
 
         .prof-cart {
@@ -80,7 +83,7 @@
         }
 
         .prof-cart i:hover {
-            color: #0000ff;
+            color: #003399;
         }
 
         .hero {
@@ -181,7 +184,7 @@
         }
 
         .f-categories button:hover {
-            background: #0000ff;
+            background: #003399;
         }
 
         .f-products {
@@ -300,8 +303,8 @@
         }
 
         .cta a button:hover {
-            background: #0000ff;
-            border: 2px solid #0000ff;
+            background: #003399;
+            border: 2px solid #003399;
         }
 
         footer {
@@ -378,6 +381,51 @@
             display: none;
         }
 
+        .account-container {
+            display: none;
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            z-index: 100;
+            padding: 20px;
+            background: #fff;
+            color: #000;
+            border-radius: 10px;
+            width: 250px;
+        }
+
+        .account-container button {
+            width: 100%;
+            padding: 10px;
+            background: #003399;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        #angleUp {
+            display: none;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: .3rem;
+        }
+
+        .account-list li {
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .account-list li:hover {
+            background: #ccc;
+        }
+
         @media (max-width: 768px) {
             .category {
                 width: calc(50% - 10px);
@@ -411,6 +459,7 @@
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 z-index: 1;
                 transition: .5s;
+                padding: 20px 8px;
             }
 
             .categories {
@@ -428,13 +477,12 @@
 </head>
 <body>
     <nav>
-        <label><span style="color: #0000ff;">E</span>-Store</label>
+        <img src="../assets/OFTO_Emporium1.png" alt="Logo" width="40" height="35">
         <ul>
             <li><a href="index.php" class="active">Home</a></li>
             <li><a href="products.php">Products</a></li>
             <li><a href="#">Categories</a></li>
             <li><a href="#">New Arrivals</a></li>
-            <li><a href="#">My Account</a></li>
         </ul>
         <div class="prof-cart">
             <div class="search">
@@ -443,6 +491,9 @@
             <a href="cart.php" class="cart">
                 <i class="fa fa-shopping-cart"></i>
             </a>
+            <div class="user">
+                <i class="fa fa-user"></i> <i class="fa fa-angle-down" id="angleDown"></i> <i class="fa fa-angle-up" id="angleUp"></i>
+            </div>
             <div class="menu-icon">
                 <i class="fa fa-bars"></i>
             </div>
@@ -451,6 +502,18 @@
             </div>
         </div>
     </nav>
+
+    <div class="account-container" id="accountContainer">
+        <ul class="account-list">
+            <li><a href="buyer_account.php" style="color: #000;"><i class="fa fa-user" style="margin-right: 10px"></i>My account</a></li>
+            <li><a href="./seller/register.php" style="color: #000;"><i class="fa fa-store" style="margin-right: 10px"></i>Become a seller</a></li>
+        </ul>
+        <?php if (!isset($_SESSION["email"])): ?>
+            <a href="login.php"><button style="text-transform:uppercase;">Login</button></a>
+        <?php else: ?>
+            <a href="logout.php"><button style="text-transform:uppercase;">Logout</button></a>
+        <?php endif ?>
+    </div>
 
     <div class="hero">
         <div class="hero-text">
@@ -533,7 +596,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <img src="../assets/OFTO1.png" alt="Ofto Emporium" width="70">
+                <img src="../assets/OFTO_Emporium1.png" alt="Logo" width="70" height="65">
                 <p>Welcome to Ofto Emporium - your premier destination for an unparalleled online shopping experience. We pride ourselves on curating a diverse collection of high-quality products, ensuring you find exactly what you're looking for.</p>
             </div>
             <div class="footer-section">
@@ -549,10 +612,10 @@
             <div class="footer-section">
                 <h2>Connect with Us</h2>
                 <div class="footer-social">
-                    <a href="#"><i class="fa fa-facebook"></i></a>
-                    <a href="#"><i class="fa fa-twitter"></i></a>
-                    <a href="#"><i class="fa fa-instagram"></i></a>
-                    <a href="#"><i class="fa fa-linkedin"></i></a>
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin"></i></a>
                 </div>
             </div>
         </div>
@@ -573,6 +636,22 @@
             menuIcon.style.display = 'block';
             closeIcon.style.display = 'none';
             navLinks.style.top = '-100%';
+        });
+
+        const angleUp = document.querySelector('#angleUp');
+        const angleDown = document.querySelector('#angleDown');
+        const accountContainer = document.querySelector('#accountContainer');
+
+        angleDown.addEventListener('click', () => {
+            accountContainer.style.display = 'block';
+            angleUp.style.display = 'block';
+            angleDown.style.display = 'none';
+        });
+
+        angleUp.addEventListener('click', () => {
+            accountContainer.style.display = 'none';
+            angleUp.style.display = 'none';
+            angleDown.style.display = 'block';
         });
     </script>
 </body>

@@ -20,7 +20,7 @@
                 $row = mysqli_fetch_assoc($result);
                 if ($row && password_verify($password, $row["password"])) {
                     $_SESSION["email"] = $email;
-                    header("Location: cart.php");
+                    header("Location: index.php");
                     exit();
                 } else {
                     $input_error = "Incorrect email or password";
@@ -96,7 +96,7 @@
             border: none;
             text-transform: uppercase;
             color: #fff;
-            background: #0000ff;
+            background: #003399;
             cursor: pointer;
         }
     </style>

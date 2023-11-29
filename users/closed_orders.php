@@ -5,6 +5,18 @@
         header('Location: login.php');
         exit();
     }
+
+    include "./config/db_connect.php";
+
+    $email = $_SESSION['email'];
+    $sql = "SELECT * FROM users WHERE email = '$email'";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result) {
+        $row = mysqli_fetch_array($result);
+        $fullname = $row["fullname"];
+        $email = $row["email"];
+    }
 ?>
 
 <!DOCTYPE html>
@@ -12,7 +24,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ofto Emporium | Buyer's Cart</title>
+    <title>Ofto Emporium | Buyer's Account</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300;400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -78,131 +90,94 @@
             color: #003399;
         }
 
-        .user-cart {
-            width: 90%;
-            margin: auto;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-        }
-
-        .cart-item {
-            padding: 10px;
-            margin: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 1rem;
-        }
-
-        .user-cart img {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-        }
-
         .menu-icon, .close-icon {
             display: none;
-        }
-
-        p {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 1rem;
-        }
-
-        p:not(:last-child) {
-            margin-bottom: 10px;
-            margin-top: 8px;
-        }
-
-        p i {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid black;
-            padding: 7px 10px;
-            border-radius: 2px;
-            transition: .5s;
-            cursor: pointer;
-        }
-
-        p i:hover {
-            color: #fff;
-            background: #000;
-        }
-
-        button {
-            margin-top: 10px;
-            background: #003399;
-            border: none;
-            border-radius: 10px;
-            padding: 7px 13px;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        .empty-cart {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 1rem;
-            min-height: calc(100vh - 100px);
-        }
-
-        .empty-cart .img {
-            background: #fff;
-            padding: 40px;
-            border-radius: 50%;
-        }
-
-        .account-container {
-            display: none;
-            position: absolute;
-            top: 80px;
-            right: 20px;
-            z-index: 100;
-            padding: 20px;
-            background: #fff;
-            color: #000;
-            border-radius: 10px;
-            width: 250px;
-        }
-
-        .account-container button {
-            width: 100%;
-            padding: 10px;
-            background: #003399;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 10px;
         }
 
         #angleUp {
             display: none;
         }
 
-        .user {
+        .main-content {
             display: flex;
-            align-items: center;
             justify-content: flex-start;
-            gap: .3rem;
+            gap: 1.5rem;
+            padding-right: 20px;
         }
 
-        .account-list li {
-            padding: 10px;
-            border-radius: 10px;
+        .main-content .sidebar {
+            padding: 20px 0;
+            border-right: 2px solid #ccc;
+            height: calc(100vh - 75px);
+            width: 350px;
+        }
+
+        .sidebar li {
+            padding: 20px 15px;
+            /* border-radius: 10px; */
             cursor: pointer;
         }
 
-        .account-list li:hover {
+        .sidebar li:hover {
+            background: #ccc;
+            transition: .5s;
+        }
+
+        .sidebar li.active {
             background: #ccc;
         }
-        
+
+        .sidebar li.active a {
+            color: #003399;
+        }
+
+        .sidebar li a {
+            color: #000;
+        }
+
+        .sidebar li:hover a {
+            color: #003399;
+            transition: .5s;
+        }
+
+        .sidebar-content {
+            background: #fff;
+            width: 100%;
+            margin: 20px 10px;
+            border-radius: 20px;
+        }
+
+        .sidebar-content h2 {
+            width: 100%;
+            padding: 15px;
+            border-bottom: 2px solid #ddd;
+        }
+        .sidebar-content .content {
+            padding: 20px;
+        }
+
+        .profile p {
+            line-height: 30px;
+        }
+
+        .order-links {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 2rem;
+        }
+
+        .order-links a {
+            color: #000;
+            text-transform: uppercase;
+            padding-bottom: 7px;
+        }
+
+        .order-links a.active {
+            border-bottom: 2px solid #003399;
+            color: #003399;
+        }
+
         @media (max-width: 1000px) {
             nav ul {
                 flex-direction: column;
@@ -239,9 +214,6 @@
             <a href="cart.php" class="cart">
                 <i class="fa fa-shopping-cart"></i>
             </a>
-            <div class="user">
-                <i class="fa fa-user"></i> <i class="fa fa-angle-down" id="angleDown"></i> <i class="fa fa-angle-up" id="angleUp"></i>
-            </div>
             <div class="menu-icon">
                 <i class="fa fa-bars"></i>
             </div>
@@ -251,46 +223,28 @@
         </div>
     </nav>
 
-    <div class="account-container" id="accountContainer">
-        <ul class="account-list">
-            <li><a href="buyer_account.php" style="color: #000;"><i class="fa fa-user" style="margin-right: 10px"></i>My account</a></li>
-            <li><a href="./seller/register.php" style="color: #000;"><i class="fa fa-store" style="margin-right: 10px"></i>Become a seller</a></li>
+    <section class="main-content">
+        <ul class="sidebar">
+            <li><a href="buyer_account.php"><i class="fa fa-user" style="margin-right: 10px"></i></a><a href="buyer_account.php">Account Overview</a></li>
+            <li class="active"><a href="orders.php"><i class="fa-solid fa-cart-shopping" style="margin-right: 10px"></i></a></i><a href="orders.php">Orders</a></li>
+            <li><a href="inbox.php"><i class="fa fa-envelope" style="margin-right: 10px"></i></a><a href="inbox.php">Inbox</a></li>
+            <li><a href="address.php"><i class="fa fa-address-card" style="margin-right: 10px"></i></a><a href="address.php">Address Book</a></li>
+            <li><a href="account_management.php"><i class="fa fa-user-pen" style="margin-right: 10px"></i></a><a href="account_management.php">Account Management</a></li>
+            <li><a href="logout.php"><i class="fa fa-sign-out" style="margin-right: 10px"></i></a><a href="logout.php">Logout</a></li>
         </ul>
-        <?php if (!isset($_SESSION["email"])): ?>
-            <a href="login.php"><button style="text-transform:uppercase;">Login</button></a>
-        <?php else: ?>
-            <a href="logout.php"><button style="text-transform:uppercase;">Logout</button></a>
-        <?php endif ?>
-    </div>
-
-    <?php 
-    
-        if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])): ?>
-            <div class="empty-cart">
-                <div class="img">
-                    <img src="../assets/OFTO_Emporium1.png" alt="Empty cart" width="100">
+        <div class="sidebar-content">
+            <h2>Orders</h2>
+            <div class="content">
+                <div class="order-links">
+                    <a href="orders.php">Open orders (<?php echo 0 ?>)</a>
+                    <a href="closed_orders.php" class="active">Closed orders (<?php echo 0 ?>)</a>
                 </div>
-                <h2 style="text-align: center; margin-top: 10px;">Your cart is empty</h2>
-                <a href="products.php"><button style="background: #003399; border-radius: 10px; padding: 10px 15px">Start shopping</button></a>
+                <div class="orders">
+                    
+                </div>
             </div>
-        <?php else: ?>
-            <h2 style="text-align: center; margin-top: 10px; margin-bottom: 10px;">Your cart</h2>
-            <div class="user-cart">
-                <?php foreach($_SESSION['cart'] as $item): ?>
-                    <div class="cart-item">
-                        <img src="<?php echo $item['image'] ?>" alt="<?php echo $item['name'] ?>" class="cart-item-image">
-                        <div>
-                            <div class="cart-item-desc">
-                                <h3><?php echo $item['name'] ?></h3>
-                                <p><b>Price:</b>₦ <?php echo $item['price'] ?></p>
-                                <p><b>Quantity:</b><?php echo $item['quantity'] ?></p>
-                            </div>
-                            <a href="remove_from_cart.php?id=<?php echo $item['id']; ?>"><button>Remove <i class="fa fa-trash"></i></button></a>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-    <?php endif; ?>
+        </div>
+    </section>
 
     <script>
         const menuIcon = document.querySelector('.menu-icon');
@@ -323,6 +277,5 @@
             angleDown.style.display = 'block';
         });
     </script>
-
 </body>
 </html>
