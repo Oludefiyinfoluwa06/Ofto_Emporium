@@ -1,32 +1,9 @@
-<?php
-    session_start();
-
-    $seller_email = $_SESSION["seller_email"];
-
-    if (!isset($seller_email)) {
-        header("Location: login.php");
-        exit();
-    }
-
-    include "../config/db_connect.php";
-
-    $sql = "SELECT * FROM sellers WHERE email = '$seller_email'";
-    $result = mysqli_query($conn, $sql);
-
-    if ($result) {
-        if (mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_array($result);
-            $fullname = $row["fullname"];
-            $business_name = $row["business_name"];
-        }
-    }
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ofto Emporium | Seller's Dashboard</title>
+    <title>Ofto Emporium | Seller's products</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300;400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -198,11 +175,11 @@
     <main>
         <aside>
             <div class="sidebar-links">
-                <a href="index.php" title="Dashboard" class="active">
+                <a href="index.php" title="Dashboard">
                     <i class="fa fa-dashboard"></i>
                     <p id="sidebar-title1">Dashboard</p>
                 </a>
-                <a href="products.php" title="Products">
+                <a href="products.php" title="Products" class="active">
                     <i class="fa fa-store"></i>
                     <p id="sidebar-title2">Produts</p>
                 </a>
@@ -225,7 +202,7 @@
             </div>
         </aside>
         <section class="main-content">
-            hello
+            <h2>Your Products</h2>
         </section>
     </main>
 
