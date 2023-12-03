@@ -8,7 +8,7 @@
         exit();
     }
 
-    include "../config/db_connect.php";
+    include "./config/db_connect.php";
 
     $sql = "SELECT * FROM sellers WHERE email = '$seller_email'";
     $result = mysqli_query($conn, $sql);
@@ -173,7 +173,7 @@
     <nav>
         <div class="right">
             <div class="logo">
-                <img src="../../assets/OFTO_Emporium1.png" alt="Logo" width="40">
+                <img src="../assets/OFTO_Emporium1.png" alt="Logo" width="40">
             </div>
 
             <i class="fa fa-bars" id="menu-icon"></i>
@@ -204,7 +204,7 @@
                 </a>
                 <a href="products.php" title="Products">
                     <i class="fa fa-store"></i>
-                    <p id="sidebar-title2">Produts</p>
+                    <p id="sidebar-title2">Products</p>
                 </a>
                 <a href="#" title="Orders">
                     <i class="fa fa-shopping-cart"></i>

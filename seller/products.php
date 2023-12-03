@@ -1,3 +1,19 @@
+<?php
+    session_start();
+
+    $seller_email = $_SESSION["seller_email"];
+
+    if (!isset($seller_email)) {
+        header("Location: login.php");
+        exit();
+    }
+
+    include "./config/db_connect.php";
+
+    $sql = "SELECT * FROM products WHERE product_seller_email = '$seller_email'";
+    $result = mysqli_query($conn, $sql);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -144,13 +160,78 @@
             width: 100%;
             padding: 30px;
         }
+
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        .product-card h2 {
+            font-size: 18px;
+            margin: 10px;
+            color: #333;
+        }
+
+        .price {
+            font-size: 16px;
+            color: #003399;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-top: 1px solid #ccc;
+        }
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        button:hover {
+            background: #003399;
+            color: #fff;
+        }
+
+        .main-content .title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
     </style>
 </head>
 <body>
     <nav>
         <div class="right">
             <div class="logo">
-                <img src="../../assets/OFTO_Emporium1.png" alt="Logo" width="40">
+                <img src="../assets/OFTO_Emporium1.png" alt="Logo" width="40">
             </div>
 
             <i class="fa fa-bars" id="menu-icon"></i>
@@ -181,7 +262,7 @@
                 </a>
                 <a href="products.php" title="Products" class="active">
                     <i class="fa fa-store"></i>
-                    <p id="sidebar-title2">Produts</p>
+                    <p id="sidebar-title2">Products</p>
                 </a>
                 <a href="#" title="Orders">
                     <i class="fa fa-shopping-cart"></i>
@@ -202,7 +283,36 @@
             </div>
         </aside>
         <section class="main-content">
-            <h2>Your Products</h2>
+            <div class="title">
+                <h2>Your Products</h2>
+                <a href="create_product.php">
+                    <button>Create New <i class="fa fa-plus"></i></button>
+                </a>
+            </div>
+            <div class="products">
+                <?php if ($result):
+                    if (mysqli_num_rows($result) > 0):
+                        while ($product = mysqli_fetch_assoc($result)): ?>
+                            <div class="product-card">
+                                <h2><?php echo $product['product_name']; ?></h2>
+                                <img src="<?php echo $product['product_img']; ?>" alt="<?php echo $product['product_name']; ?>" class="product-image">
+                                <p class="price">₦ <?php echo $product['product_price']; ?></p>
+                                <div class="buttons">
+                                    <a href="view_product_detail.php?id=<?php echo $product['id']; ?>">
+                                        <button><i class="fa fa-eye"></i> View</button>
+                                    </a>
+                                    <a href="edit.php?id=<?php echo $product['id']; ?>">
+                                        <button><i class="fa fa-pencil"></i> Edit</button>
+                                    </a>
+                                    <a href="delete.php?id=<?php echo $product['id']; ?>">
+                                        <button><i class="fa fa-trash"></i> Delete</button>
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endwhile;
+                    endif;
+                endif;?>
+            </div>
         </section>
     </main>
 

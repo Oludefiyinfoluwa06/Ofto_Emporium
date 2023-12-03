@@ -330,7 +330,7 @@
     <div class="account-container" id="accountContainer">
         <ul class="account-list">
             <li><a href="buyer_account.php" style="color: #000;"><i class="fa fa-user" style="margin-right: 10px"></i>My account</a></li>
-            <li><a href="./seller/register.php" style="color: #000;"><i class="fa fa-store" style="margin-right: 10px"></i>Become a seller</a></li>
+            <li><a href="../seller/register.php" style="color: #000;"><i class="fa fa-store" style="margin-right: 10px"></i>Become a seller</a></li>
         </ul>
         <?php if (!isset($_SESSION["email"])): ?>
             <a href="login.php"><button style="text-transform:uppercase;">Login</button></a>
@@ -342,8 +342,8 @@
     <div class="product-listing">
         <h1>All Products</h1>
         <div class="products">
-            <?php if (mysqli_num_rows($product_result) > 0): ?>
-                <?php while ($product = mysqli_fetch_assoc($product_result)): ?>
+            <?php if (mysqli_num_rows($product_result) > 0):
+                while ($product = mysqli_fetch_assoc($product_result)): ?>
                     <div class="product-card">
                     <h2><?php echo $product['product_name']; ?></h2>
                     <img src="<?php echo $product['product_img']; ?>" alt="<?php echo $product['product_name']; ?>" class="product-image">
@@ -357,8 +357,8 @@
                         </a>
                     </div>
                 </div>
-                <?php endwhile; ?>
-            <?php endif; ?>
+                <?php endwhile;
+            endif; ?>
         </div>
     </div>
 

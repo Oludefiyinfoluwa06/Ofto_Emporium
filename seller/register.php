@@ -4,7 +4,7 @@
     if (isset($_SESSION["seller_email"])) {
         header("Location: index.php");
     }
-    include "../config/db_connect.php";
+    include "./config/db_connect.php";
 
     $fullname = $seller_email = $phone = $business_name = $business_address = $account_number = $account_name = $bank_name = $password = $input_error = "";
 

@@ -506,7 +506,7 @@
     <div class="account-container" id="accountContainer">
         <ul class="account-list">
             <li><a href="buyer_account.php" style="color: #000;"><i class="fa fa-user" style="margin-right: 10px"></i>My account</a></li>
-            <li><a href="./seller/register.php" style="color: #000;"><i class="fa fa-store" style="margin-right: 10px"></i>Become a seller</a></li>
+            <li><a href="../seller/register.php" style="color: #000;"><i class="fa fa-store" style="margin-right: 10px"></i>Become a seller</a></li>
         </ul>
         <?php if (!isset($_SESSION["email"])): ?>
             <a href="login.php"><button style="text-transform:uppercase;">Login</button></a>

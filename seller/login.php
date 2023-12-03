@@ -5,7 +5,7 @@
         header("Location: index.php");
         exit();
     } else {
-        include "../config/db_connect.php";
+        include "./config/db_connect.php";
 
         $seller_email = $password = $input_error = "";
 
