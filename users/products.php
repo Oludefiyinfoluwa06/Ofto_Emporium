@@ -346,7 +346,7 @@
                 while ($product = mysqli_fetch_assoc($product_result)): ?>
                     <div class="product-card">
                     <h2><?php echo $product['product_name']; ?></h2>
-                    <img src="<?php echo $product['product_img']; ?>" alt="<?php echo $product['product_name']; ?>" class="product-image">
+                    <img src="../assets/uploads/product_images/<?php echo $product['product_img']; ?>" alt="<?php echo $product['product_name']; ?>" class="product-image">
                     <p class="price">₦ <?php echo $product['product_price']; ?></p>
                     <div class="buttons">
                         <a href="product_details.php?id=<?php echo $product['id']; ?>">
