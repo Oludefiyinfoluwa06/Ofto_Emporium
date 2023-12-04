@@ -21,7 +21,7 @@
     //     }
     // }
 
-    $product_image = $product_name = $product_price = $product_desc = $category = $input_error = "";
+    $product_name = $product_price = $product_desc = $category = $input_error = "";
 
     if (isset($_POST["create_product"])) {
         // $product_image = mysqli_real_escape_string($conn, $_POST["product_image"]);
