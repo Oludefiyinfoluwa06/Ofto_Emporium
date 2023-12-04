@@ -301,10 +301,10 @@
                                     <a href="view_product_detail.php?id=<?php echo $product['id']; ?>">
                                         <button><i class="fa fa-eye"></i> View</button>
                                     </a>
-                                    <a href="edit.php?id=<?php echo $product['id']; ?>">
+                                    <a href="edit_product.php?id=<?php echo $product['id']; ?>">
                                         <button><i class="fa fa-pencil"></i> Edit</button>
                                     </a>
-                                    <a href="delete.php?id=<?php echo $product['id']; ?>">
+                                    <a href="delete_product.php?id=<?php echo $product['id']; ?>">
                                         <button><i class="fa fa-trash"></i> Delete</button>
                                     </a>
                                 </div>

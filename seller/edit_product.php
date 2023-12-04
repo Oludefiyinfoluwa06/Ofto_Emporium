@@ -10,33 +10,37 @@
 
     include "./config/db_connect.php";
 
-    // $sql = "SELECT * FROM sellers WHERE email = '$seller_email'";
-    // $result = mysqli_query($conn, $sql);
-
-    // if ($result) {
-    //     if (mysqli_num_rows($result) > 0) {
-    //         $row = mysqli_fetch_array($result);
-    //         $fullname = $row["fullname"];
-    //         $business_name = $row["business_name"];
-    //     }
-    // }
-
     $product_image = $product_name = $product_price = $product_desc = $category = $input_error = "";
 
-    if (isset($_POST["create_product"])) {
+    $sqli = "SELECT * FROM products WHERE product_seller_email = '$seller_email'";
+    $result = mysqli_query($conn, $sqli);
+
+    if ($result) {
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_array($result);
+            $product_image = $row["product_img"];
+            $product_name = $row["product_name"];
+            $category = $row["product_category"];
+            $product_price = $row["product_price"];
+            $product_desc = $row["product_description"];
+        }
+    }
+
+
+    if (isset($_POST["edit_product"])) {
         // $product_image = mysqli_real_escape_string($conn, $_POST["product_image"]);
         $product_name = mysqli_real_escape_string($conn, $_POST["product_name"]);
         $product_price = mysqli_real_escape_string($conn, $_POST["product_price"]);
         $product_desc = mysqli_real_escape_string($conn, $_POST["product_desc"]);
         $category = mysqli_real_escape_string($conn, $_POST["category"]);
 
-        if (empty($product_name)|| empty($product_price)|| empty($product_desc)|| empty($category)) {
+        if (empty($product_name) || empty($product_price) || empty($product_desc) || empty($category)) {
             $input_error = "Input fields cannot be empty";
         }
 
         if (isset($_FILES["product_image"])) {
             $img_name = $_FILES["product_image"]["name"];
-            //$img_type = $_FILES["product_image"]["type"];
+            // $img_type = $_FILES["product_image"]["type"];
             $tmp_name = $_FILES["product_image"]["tmp_name"];
 
             $img_explode = explode(".", $img_name);
@@ -45,11 +49,11 @@
             $extensions = ["jpg", "png", "jpeg"];
 
             if (in_array($img_ext, $extensions) === true) {
-                $time = time();
-                $new_img_name = $time . $img_name;
-                if (move_uploaded_file($tmp_name, "../assets/uploads/product_images/" . $new_img_name)) {
+                // $time = time();
+                // $new_img_name = $time . $img_name;
+                if (move_uploaded_file($tmp_name, "../assets/uploads/product_images/" . $img_name)) {
                     if (empty($input_error)) {
-                        $sql = "INSERT INTO products (product_seller_email, product_img, product_name, product_category, product_price, product_description) VALUES ('$seller_email', '$new_img_name', '$product_name', '$category', '$product_price', '$product_desc')";
+                        $sql = "UPDATE products SET product_seller_email = '$seller_email', product_img = '$new_img_name', product_name = '$product_name', product_category = '$category', product_price = '$product_price', product_description = '$product_desc'";
 
                         $query = mysqli_query($conn, $sql);
 
@@ -320,12 +324,12 @@
                 <input type="number" id="product_price" name="product_price" value="<?php echo htmlspecialchars($product_price) ?>" required>
 
                 <label for="product_desc">Product description:</label>
-                <textarea type="text" id="product_desc" name="product_desc" value="<?php echo htmlspecialchars($product_desc) ?>" required></textarea>
+                <textarea type="text" id="product_desc" name="product_desc" required><?php echo htmlspecialchars($product_desc) ?></textarea>
 
                 <label for="category">Product category:</label>
                 <input type="text" id="category" name="category" value="<?php echo htmlspecialchars($category) ?>" required>
 
-                <button type="submit" name="create_product">Create Product</button>
+                <button type="submit" name="edit_product">Edit Product</button>
             </form>
         </section>
     </main>
