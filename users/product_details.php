@@ -1,10 +1,26 @@
 <?php
-    session_start();
 
-    if (!isset($_SESSION['email'])) {
-        header('Location: login.php');
-        exit();
+    session_start();
+    
+    include "./config/db_connect.php";
+
+    $id = $_GET["id"];
+
+    $sqli = "SELECT * FROM products WHERE id = '$id'";
+    $result = mysqli_query($conn, $sqli);
+
+    if ($result) {
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_array($result);
+            $product_id = $row["id"];
+            $product_image = $row["product_img"];
+            $product_name = $row["product_name"];
+            $category = $row["product_category"];
+            $product_price = $row["product_price"];
+            $product_desc = $row["product_description"];
+        }
     }
+
 ?>
 
 <!DOCTYPE html>
@@ -12,7 +28,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ofto Emporium | Buyer's Cart</title>
+    <title>Ofto Emporium | Products</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300;400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -78,84 +94,143 @@
             color: #003399;
         }
 
-        .user-cart {
-            width: 90%;
-            margin: auto;
-            margin-bottom: 10px;
-        }
-        
-        .cart-item {
-            padding: 10px;
-            margin: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 10px;
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 30px 20px;
+            text-align: center;
         }
 
-        .user-cart img {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .footer-section {
+            flex: 1;
+            margin-bottom: 20px;
+        }
+
+        .footer-section h2,
+        .footer-section img {
+            color: #fff;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .footer-section p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #ccc;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+
+        .footer-links a {
+            color: #fff;
+            margin: 0 15px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #00f;
+        }
+
+        .footer-social {
+            margin-top: 20px;
+        }
+
+        .footer-social i {
+            font-size: 1.5rem;
+            color: #fff;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+
+        .footer-social i:hover {
+            color: #00f;
+        }
+
+        .footer-disclaimer {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+
+        .product-listing {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        .product-card h2 {
+            font-size: 18px;
+            margin: 10px;
+            color: #333;
+        }
+
+        .price {
+            font-size: 16px;
+            color: #003399;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-top: 1px solid #ccc;
+        }
+
+        .buttons button {
+            padding: 8px 15px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .buttons button:hover {
+            background: #003399;
+            color: #fff;
         }
 
         .menu-icon, .close-icon {
             display: none;
-        }
-
-        p {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 1rem;
-        }
-
-        p:not(:last-child) {
-            margin-bottom: 10px;
-            margin-top: 8px;
-        }
-
-        p i {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid black;
-            padding: 7px 10px;
-            border-radius: 2px;
-            transition: .5s;
-            cursor: pointer;
-        }
-
-        p i:hover {
-            color: #fff;
-            background: #000;
-        }
-
-        button {
-            margin-top: 10px;
-            background: #003399;
-            border: none;
-            border-radius: 10px;
-            padding: 7px 13px;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        .empty-cart {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 1rem;
-            min-height: calc(100vh - 100px);
-        }
-
-        .empty-cart .img {
-            background: #fff;
-            padding: 40px;
-            border-radius: 50%;
         }
 
         .account-container {
@@ -201,6 +276,45 @@
 
         .account-list li:hover {
             background: #ccc;
+        }
+
+        .product-detail {
+            display: flex;
+            justify-content: flex-start;
+            gap: 2rem;
+            padding: 20px;
+        }
+
+        .product-detail img {
+            width: 400px;
+            height: 300px;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        button {
+            margin-top: 10px;
+            background: #003399;
+            border: none;
+            border-radius: 10px;
+            padding: 7px 13px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        @media (max-width: 480px) {
+            .product-card {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-section {
+                flex: 0 0 100%;
+            }
+            .products {
+                justify-content: center;
+            }
         }
         
         @media (max-width: 1000px) {
@@ -254,7 +368,7 @@
     <div class="account-container" id="accountContainer">
         <ul class="account-list">
             <li><a href="buyer_account.php" style="color: #000;"><i class="fa fa-user" style="margin-right: 10px"></i>My account</a></li>
-            <li><a href="./seller/register.php" style="color: #000;"><i class="fa fa-store" style="margin-right: 10px"></i>Become a seller</a></li>
+            <li><a href="../seller/register.php" style="color: #000;"><i class="fa fa-store" style="margin-right: 10px"></i>Become a seller</a></li>
         </ul>
         <?php if (!isset($_SESSION["email"])): ?>
             <a href="login.php"><button style="text-transform:uppercase;">Login</button></a>
@@ -263,34 +377,49 @@
         <?php endif ?>
     </div>
 
-    <?php 
-    
-        if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])): ?>
-            <div class="empty-cart">
-                <div class="img">
-                    <img src="../assets/OFTO_Emporium1.png" alt="Empty cart" width="100">
+    <div class="product-detail">
+        <img src="../assets/uploads/product_images/<?php echo $product_image ?>" alt="<?php echo $product_name ?>">
+        <div class="details">
+            <h2><?php echo $product_name ?></h2>
+            <p><?php echo $category ?></p>
+            <p>₦ <?php echo $product_price ?></p>
+            <p><b>Description:</b><br /> <?php echo $product_desc ?></p>
+            <a href="add_to_cart.php?id=<?php echo $product_id; ?>">
+                <button>Add to Cart</button>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <img src="../assets/OFTO_Emporium1.png" alt="Logo" width="70" height="65">
+                <p>Welcome to Ofto Emporium - your premier destination for an unparalleled online shopping experience. We pride ourselves on curating a diverse collection of high-quality products, ensuring you find exactly what you're looking for.</p>
+            </div>
+            <div class="footer-section">
+                <h2>Quick Links</h2>
+                <div class="footer-links">
+                    <a href="index.php">Home</a>
+                    <a href="products.php">Products</a>
+                    <a href="#">Categories</a>
+                    <a href="#">New Arrivals</a>
+                    <a href="#">Contact</a>
                 </div>
-                <h2 style="text-align: center; margin-top: 10px;">Your cart is empty</h2>
-                <a href="products.php"><button style="background: #003399; border-radius: 10px; padding: 10px 15px">Start shopping</button></a>
             </div>
-        <?php else: ?>
-            <h2 style="text-align: center; margin-top: 10px; margin-bottom: 10px;">Your cart</h2>
-            <div class="user-cart">
-                <?php foreach($_SESSION['cart'] as $item): ?>
-                    <div class="cart-item">
-                        <img src="../assets/uploads/product_images/<?php echo $item['image'] ?>" alt="<?php echo $item['name'] ?>" class="cart-item-image">
-                        <div>
-                            <div class="cart-item-desc">
-                                <h3><?php echo $item['name'] ?></h3>
-                                <p><b>Price:</b>₦ <?php echo $item['price'] ?></p>
-                                <p><b>Quantity:</b><?php echo $item['quantity'] ?></p>
-                            </div>
-                            <a href="remove_from_cart.php?id=<?php echo $item['id']; ?>"><button>Remove <i class="fa fa-trash"></i></button></a>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+            <div class="footer-section">
+                <h2>Connect with Us</h2>
+                <div class="footer-social">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                </div>
             </div>
-    <?php endif; ?>
+        </div>
+        <div class="footer-disclaimer">
+            <p>&copy; 2023 Ofto Emporium. All rights reserved | Designed by <a href="https://oludefiyin.web.app" style="color: white;">Ofto Technologies</a></p>
+        </div>
+    </footer>
 
     <script>
         const menuIcon = document.querySelector('.menu-icon');

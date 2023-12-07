@@ -2,6 +2,7 @@
     session_start();
 
     $seller_email = $_SESSION["seller_email"];
+    $id = $_GET["id"];
 
     if (!isset($seller_email)) {
         header("Location: login.php");
@@ -10,73 +11,27 @@
 
     include "./config/db_connect.php";
 
-    // $sql = "SELECT * FROM sellers WHERE email = '$seller_email'";
-    // $result = mysqli_query($conn, $sql);
+    $sqli = "SELECT * FROM products WHERE id = '$id' AND product_seller_email = '$seller_email'";
+    $result = mysqli_query($conn, $sqli);
 
-    // if ($result) {
-    //     if (mysqli_num_rows($result) > 0) {
-    //         $row = mysqli_fetch_array($result);
-    //         $fullname = $row["fullname"];
-    //         $business_name = $row["business_name"];
-    //     }
-    // }
-
-    $product_name = $product_price = $product_desc = $category = $input_error = "";
-
-    if (isset($_POST["create_product"])) {
-        // $product_image = mysqli_real_escape_string($conn, $_POST["product_image"]);
-        $product_name = mysqli_real_escape_string($conn, $_POST["product_name"]);
-        $product_price = mysqli_real_escape_string($conn, $_POST["product_price"]);
-        $product_desc = mysqli_real_escape_string($conn, $_POST["product_desc"]);
-        $category = mysqli_real_escape_string($conn, $_POST["category"]);
-
-        if (empty($product_name)|| empty($product_price)|| empty($product_desc)|| empty($category)) {
-            $input_error = "Input fields cannot be empty";
+    if ($result) {
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_array($result);
+            $product_image = $row["product_img"];
+            $product_name = $row["product_name"];
+            $category = $row["product_category"];
+            $product_price = $row["product_price"];
+            $product_desc = $row["product_description"];
         }
-
-        if (isset($_FILES["product_image"])) {
-            $img_name = $_FILES["product_image"]["name"];
-            //$img_type = $_FILES["product_image"]["type"];
-            $tmp_name = $_FILES["product_image"]["tmp_name"];
-
-            $img_explode = explode(".", $img_name);
-            $img_ext = end($img_explode);
-
-            $extensions = ["jpg", "png", "jpeg"];
-
-            if (in_array($img_ext, $extensions) === true) {
-                $time = time();
-                $new_img_name = $time . $img_name;
-                if (move_uploaded_file($tmp_name, "../assets/uploads/product_images/" . $new_img_name)) {
-                    if (empty($input_error)) {
-                        $sql = "INSERT INTO products (product_seller_email, product_img, product_name, product_category, product_price, product_description) VALUES ('$seller_email', '$new_img_name', '$product_name', '$category', '$product_price', '$product_desc')";
-
-                        $query = mysqli_query($conn, $sql);
-
-                        if ($query) {
-                            header("Location: products.php");
-                            exit();
-                        } else {
-                            $input_error = "There's an error creating product. Try again";
-                        }
-
-                    }
-                }
-            } else {
-                $input_error = "Please select an image file - jpg, jpeg, png";
-            }
-        } else {
-            $input_error = "Please select an image file";
-        }
-
     }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ofto Emporium | Seller's Dashboard</title>
+    <title>Ofto Emporium | Product detail</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300;400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -218,35 +173,17 @@
             padding: 30px;
         }
 
-        form label {
-            display: block;
-            margin-bottom: 8px;
+        .product-detail {
+            display: flex;
+            justify-content: flex-start;
+            gap: 2rem;
         }
 
-        form input, form textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        form textarea {
-            max-width: 100%;
-            min-width: 100%;
-            max-height: 100px;
-            min-height: 100px;
-        }
-
-        form button {
-            background-color: #003399;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            width: 100%;
-            cursor: pointer;
+        .product-detail img {
+            width: 400px;
+            height: 300px;
+            object-fit: cover;
+            object-position: center;
         }
     </style>
 </head>
@@ -306,27 +243,15 @@
             </div>
         </aside>
         <section class="main-content">
-            <h2 style="text-align: center;">Create a product</h2>
-            <form action="" method="post" enctype="multipart/form-data">
-                <p style="text-align: center; color: red;"><?php echo $input_error ?></p>
-
-                <label for="product_image">Product image:</label>
-                <input type="file" id="product_image" name="product_image" value="<?php echo htmlspecialchars($product_image) ?>" required>
-
-                <label for="product_name">Product name:</label>
-                <input type="text" id="product_name" name="product_name" value="<?php echo htmlspecialchars($product_name) ?>" required>
-
-                <label for="product_price">Product price:</label>
-                <input type="number" id="product_price" name="product_price" value="<?php echo htmlspecialchars($product_price) ?>" required>
-
-                <label for="product_desc">Product description:</label>
-                <textarea type="text" id="product_desc" name="product_desc" value="<?php echo htmlspecialchars($product_desc) ?>" required></textarea>
-
-                <label for="category">Product category:</label>
-                <input type="text" id="category" name="category" value="<?php echo htmlspecialchars($category) ?>" required>
-
-                <button type="submit" name="create_product">Create Product</button>
-            </form>
+            <div class="product-detail">
+                <img src="../assets/uploads/product_images/<?php echo $product_image ?>" alt="<?php echo $product_name ?>">
+                <div class="details">
+                    <h2><?php echo $product_name ?></h2>
+                    <p><?php echo $category ?></p>
+                    <p>₦ <?php echo $product_price ?></p>
+                    <p><b>Description:</b><br /> <?php echo $product_desc ?></p>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -351,6 +276,7 @@
             closeIcon.style.display = 'block';
             menuIcon.style.display = 'none';
         });
+
         closeIcon.addEventListener('click', () => {
             sidebarTitle1.style.display = 'none';
             sidebarTitle2.style.display = 'none';

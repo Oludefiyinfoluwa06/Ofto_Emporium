@@ -49,22 +49,26 @@
             $extensions = ["jpg", "png", "jpeg"];
 
             if (in_array($img_ext, $extensions) === true) {
-                // $time = time();
-                // $new_img_name = $time . $img_name;
-                if (move_uploaded_file($tmp_name, "../assets/uploads/product_images/" . $img_name)) {
-                    if (empty($input_error)) {
-                        $sql = "UPDATE products SET product_seller_email = '$seller_email', product_img = '$new_img_name', product_name = '$product_name', product_category = '$category', product_price = '$product_price', product_description = '$product_desc'";
+                $time = time();
+                $new_img_name = $time . $img_name;
+                $old_img = "../assets/uploads/product_images/" . $product_image;
+                if (unlink($old_img)) {
+                    move_uploaded_file($tmp_name, "../assets/uploads/product_images/" . $new_img_name);
+                } else {
+                    move_uploaded_file($tmp_name, "../assets/uploads/product_images/" . $img_name);
+                }
+                if (empty($input_error)) {
+                    $sql = "UPDATE products SET product_seller_email = '$seller_email', product_img = '$new_img_name', product_name = '$product_name', product_category = '$category', product_price = '$product_price', product_description = '$product_desc'";
 
-                        $query = mysqli_query($conn, $sql);
+                    $query = mysqli_query($conn, $sql);
 
-                        if ($query) {
-                            header("Location: products.php");
-                            exit();
-                        } else {
-                            $input_error = "There's an error creating product. Try again";
-                        }
-
+                    if ($query) {
+                        header("Location: products.php");
+                        exit();
+                    } else {
+                        $input_error = "There's an error creating product. Try again";
                     }
+
                 }
             } else {
                 $input_error = "Please select an image file - jpg, jpeg, png";
@@ -283,11 +287,11 @@
     <main>
         <aside>
             <div class="sidebar-links">
-                <a href="index.php" title="Dashboard" class="active">
+                <a href="index.php" title="Dashboard">
                     <i class="fa fa-dashboard"></i>
                     <p id="sidebar-title1">Dashboard</p>
                 </a>
-                <a href="products.php" title="Products">
+                <a href="products.php" title="Products" class="active">
                     <i class="fa fa-store"></i>
                     <p id="sidebar-title2">Products</p>
                 </a>

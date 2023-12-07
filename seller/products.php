@@ -298,7 +298,7 @@
                                 <img src="../assets/uploads/product_images/<?php echo $product['product_img']; ?>" alt="<?php echo $product['product_name']; ?>" class="product-image">
                                 <p class="price">₦ <?php echo $product['product_price']; ?></p>
                                 <div class="buttons">
-                                    <a href="view_product_detail.php?id=<?php echo $product['id']; ?>">
+                                    <a href="product_detail.php?id=<?php echo $product['id']; ?>">
                                         <button><i class="fa fa-eye"></i> View</button>
                                     </a>
                                     <a href="edit_product.php?id=<?php echo $product['id']; ?>">

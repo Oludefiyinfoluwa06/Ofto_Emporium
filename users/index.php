@@ -542,7 +542,7 @@
             <div class="products">
                 <?php while ($row = mysqli_fetch_array($product_result)): ?>
                     <div class="product">
-                        <img src="<?php echo $row["product_img"] ?>" alt="<?php echo $row["product_name"] ?>">
+                        <img src="../assets/uploads/product_images/<?php echo $row["product_img"] ?>" alt="<?php echo $row["product_name"] ?>">
                         <p><?php echo $row["product_name"] ?></p>
                         <p style="font-size: 20px; font-weight: bold;">₦ <?php echo $row["product_price"] ?></p>
                     </div>
@@ -557,7 +557,7 @@
             <div class="products">
                 <?php while ($row = mysqli_fetch_array($arrival_result)): ?>
                     <div class="product">
-                        <img src="<?php echo $row["product_img"] ?>" alt="<?php echo $row["product_name"] ?>">
+                        <img src="../assets/uploads/product_images/<?php echo $row["product_img"] ?>" alt="<?php echo $row["product_name"] ?>">
                         <p><?php echo $row["product_name"] ?></p>
                         <p style="font-size: 20px; font-weight: bold;">₦ <?php echo $row["product_price"] ?></p>
                     </div>
